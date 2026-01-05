@@ -289,7 +289,9 @@ log_probs = model(x)  # (T, B, C) log-probabilities
 
 ## License
 
-This project is for educational purposes. The PHP captcha generator uses [Gregwar/Captcha](https://github.com/Gregwar/Captcha).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+The PHP captcha generator uses [Gregwar/Captcha](https://github.com/Gregwar/Captcha) (also MIT licensed).
 
 ## References
 
