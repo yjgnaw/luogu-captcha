@@ -29,6 +29,10 @@ ENV/
 env/
 .venv
 
+# PHP & Composer
+vendor/
+composer.lock
+
 # IDEs
 .vscode/
 .idea/
