@@ -1,0 +1,8 @@
+torch>=2.2
+torchvision>=0.17
+pandas>=2.0
+pillow>=10.0
+tqdm>=4.65
+pytest>=7.0
+requests>=2.28
+matplotlib>=3.5
