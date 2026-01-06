@@ -59,7 +59,7 @@ Comprehensive test suite for `src.model` and `src.config`.
 **Current:** 12 tests, all passing
 
 | Category | Tests |
-|----------|-------|
+| ---------- | ------- |
 | Shape & normalization | 3 |
 | Decoding & conversion | 5 |
 | Configuration | 3 |

@@ -59,7 +59,7 @@ CRNN model architecture and utility functions for captcha recognition.
 
 ## Architecture Overview
 
-```
+```plain
 Input (B, 3, 35, 90)
     ↓
 [CNN Backbone]
