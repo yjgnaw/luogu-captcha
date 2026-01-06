@@ -13,7 +13,7 @@ A PyTorch-based CRNN (Convolutional Recurrent Neural Network) for recognizing 35
 
 ## Project Structure
 
-```
+```plain
 luogu-captcha/
 ├── src/
 │   ├── __init__.py
@@ -106,7 +106,7 @@ The script creates:
 - **`captchas/`** folder with JPEG images (e.g., `captcha_00001.jpg`, `captcha_00002.jpg`, ...)
 - **`captchas/labels.csv`** with format:
 
-  ```
+  ```plain
   captcha_00001.jpg,3K7F
   captcha_00002.jpg,9ABC
   ...
@@ -148,7 +148,7 @@ python scripts/smoke_model.py
 
 Expected output:
 
-```
+```plain
 Log prob shape: (22, 2, 61) (T, B, C=61)
 Sample 0: '...' (len=4)
 Sample 1: '...' (len=4)
@@ -218,7 +218,7 @@ pytest -q
 
 Expected output:
 
-```
+```plain
 4 passed in 2.49s
 ```
 
@@ -255,13 +255,14 @@ Final feature map: `(batch, 512, 2, 22)`
 
 With 50k captcha dataset (90% train, 10% val), stronger regularization (LSTM dropout 0.4, aggressive augmentation), and batch size 128:
 
-```
-Epoch 30/30
-  train_loss=0.0824 train_acc=0.9512 val_loss=0.2156 val_acc=0.8640
-  Saved latest model to checkpoints/crnn.pt
+```plain
+Epoch 52/56
+  train_loss=0.0703 train_acc=0.9265 val_loss=0.1070 val_acc=0.8880                                        
+  New best val_acc: 0.8880 -> Saved to D:\I-Iypo\github\luogu-captcha\checkpoints\crnn_best.pt
+  Saved latest model to D:\I-Iypo\github\luogu-captcha\checkpoints\crnn.pt
 ```
 
-Best validation accuracy: **86.4%+** (exact 4-character match) with improved generalization over 10k dataset baseline.
+Best validation accuracy: **88.8%** (exact 4-character match) with improved generalization over 50k dataset baseline.
 
 ## API Reference
 
