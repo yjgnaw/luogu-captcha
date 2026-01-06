@@ -11,28 +11,24 @@ if (!is_dir($outputDir)) {
     mkdir($outputDir, 0755, true);
 }
 
-// Create a custom phrase builder that generates 4-character phrases
-class FourCharPhraseBuilder extends PhraseBuilder
-{
-    public function build($length = null, $charset = null)
-    {
-        $phrase = '';
-        $charset = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz';
-        for ($i = 0; $i < 4; $i++) {
-            $phrase .= $charset[rand(0, strlen($charset) - 1)];
-        }
-        return $phrase;
+// Parse command-line arguments
+$count = 50000; // Default count
+if (isset($argv[1])) {
+    $count = (int) $argv[1];
+    if ($count <= 0) {
+        echo "Error: Count must be a positive integer.\n";
+        exit(1);
     }
 }
 
 // Open labels file
 $labelsFile = fopen($outputDir . '/labels.csv', 'w');
 
-echo "Generating 10000 4-character captchas...\n";
+echo "Generating $count 4-character captchas...\n";
 
-$phraseBuilder = new FourCharPhraseBuilder();
+$phraseBuilder = new PhraseBuilder(4);
 
-for ($i = 1; $i <= 10000; $i++) {
+for ($i = 1; $i <= $count; $i++) {
     $builder = new CaptchaBuilder(null, $phraseBuilder);
     // Luogu captchas are 90x35
     $builder->build(90, 35);
@@ -51,6 +47,6 @@ for ($i = 1; $i <= 10000; $i++) {
 
 fclose($labelsFile);
 
-echo "Done! Generated 10000 4-character captchas in the 'captchas_4char' directory.\n";
+echo "Done! Generated $count 4-character captchas in the 'captchas' directory.\n";
 echo "Labels saved to captchas/labels.csv\n";
 ?>

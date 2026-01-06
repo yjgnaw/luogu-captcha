@@ -1,13 +1,8 @@
 import torch
 
 from src.config import BLANK_INDEX, CHARSET, NUM_CLASSES
-from src.model import (
-    CRNN,
-    CRNNConfig,
-    ctc_greedy_decode,
-    labels_to_text,
-    text_to_labels,
-)
+from src.model import (CRNN, CRNNConfig, ctc_greedy_decode, labels_to_text,
+                       text_to_labels)
 
 
 def test_forward_shape_and_normalization():

@@ -32,7 +32,8 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
 from src.config import BLANK_INDEX, CHARSET, NUM_CLASSES  # noqa: E402
-from src.model import CRNN, CRNNConfig, ctc_greedy_decode, text_to_labels  # noqa: E402
+from src.model import (CRNN, CRNNConfig, ctc_greedy_decode,  # noqa: E402
+                       text_to_labels)
 
 
 @dataclass
@@ -129,8 +130,9 @@ def build_loaders(args: Args):
 
     train_transform = transforms.Compose(
         [
-            transforms.ColorJitter(brightness=0.2, contrast=0.2),
-            transforms.RandomAffine(degrees=5, translate=(0.02, 0.05), shear=5),
+            transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2),
+            transforms.RandomAffine(degrees=8, translate=(0.03, 0.08), shear=8),
+            transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 0.5)),
             transforms.ToTensor(),
         ]
     )
@@ -269,8 +271,8 @@ def parse_args() -> Args:
         default=ROOT / "captchas" / "labels.csv",
         help="CSV with filename,text",
     )
-    parser.add_argument("--batch-size", type=int, default=64)
-    parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--num-workers", type=int, default=2)
@@ -328,6 +330,7 @@ def main() -> None:
     set_seed(args.seed)
 
     device = torch.device(args.device)
+    print(f"Using device: {device}")
     args.save_path.parent.mkdir(parents=True, exist_ok=True)
 
     train_loader, val_loader = build_loaders(args)
@@ -359,8 +362,10 @@ def main() -> None:
             f"val_loss={val_loss:.4f} val_acc={val_acc:.4f}"
         )
 
-        if val_acc >= best_val_acc:
+        # Check if validation improved
+        if val_acc > best_val_acc:
             best_val_acc = val_acc
+            best_save_path = args.save_path.parent / "crnn_best.pt"
             torch.save(
                 {
                     "model_state": model.state_dict(),
@@ -372,9 +377,25 @@ def main() -> None:
                         "charset": CHARSET,
                     },
                 },
-                args.save_path,
+                best_save_path,
             )
-            print(f"  Saved best model to {args.save_path} (val_acc={val_acc:.4f})")
+            print(f"  New best val_acc: {val_acc:.4f} -> Saved to {best_save_path}")
+
+        # Save latest model every epoch (with updated best_val_acc)
+        torch.save(
+            {
+                "model_state": model.state_dict(),
+                "optimizer_state": optimizer.state_dict(),
+                "best_val_acc": best_val_acc,
+                "epoch": epoch,
+                "config": {
+                    "img_channels": args.img_channels,
+                    "charset": CHARSET,
+                },
+            },
+            args.save_path,
+        )
+        print(f"  Saved latest model to {args.save_path}")
 
     print("Training complete.")
 

@@ -95,6 +95,7 @@ class CRNNConfig:
     hidden_size: int = 256
     num_lstm_layers: int = 2
     num_classes: int = NUM_CLASSES
+    lstm_dropout: float = 0.4
 
 
 class CRNN(nn.Module):
@@ -141,6 +142,7 @@ class CRNN(nn.Module):
             hidden_size=cfg.hidden_size,
             num_layers=cfg.num_lstm_layers,
             bidirectional=True,
+            dropout=cfg.lstm_dropout if cfg.num_lstm_layers > 1 else 0.0,
         )
 
         self.classifier = nn.Linear(cfg.hidden_size * 2, cfg.num_classes)
